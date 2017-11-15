@@ -1,0 +1,44 @@
+{% extends "learning_logs/base.html" %}
+{% block header %}
+    <h2>{{ topic }}</h2>
+	<h3><a href="{% url 'learning_logs:edit_topic' topic.id %}">edit topic</a></h3>
+{% endblock header %}
+
+{% block content %}  
+	<p><a href="{% url 'learning_logs:new_entry' topic.id %}">add new entry</a> </p>
+	{% for entry in entries %}
+	<div class="panel panel-default">
+	<div class="panel-heading">
+	 <h3> 
+	<span>Creation Time:</span>{{ entry.date_added|date:'M d, Y H:i' }}
+	</h3>
+	<div>
+	<button class="btn btn-primary" data-toggle="modal" data-target="#mymodal-data" type="button">delete entry</button>
+	<!-- 模态弹出窗内容 -->
+	<div class="modal" id="mymodal-data" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Message</h4>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure to delete this item?</p>
+				</div>
+				<div class="modal-footer" style="text-align:center;">
+					<button type="button" class="btn btn-default" data-dismiss="modal">canel</button>
+					<button type="button" class="btn btn-primary" onclick="javascript:top.location='{% url 'learning_logs:delete_entry' entry.id %}'">submit</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<button type="button" class="btn btn-primary" onclick="javascript:top.location='{% url 'learning_logs:edit_entry' entry.id %}'">edit entry</button>
+	</div>
+	</div>
+ 	<div class="panel-body"> 
+	{{ entry.text|linebreaks }}
+	</div>
+	</div>
+	{% empty %}
+	  <li>There are no entries for this topic yet. </li>
+	{% endfor %}
+{% endblock content %}
