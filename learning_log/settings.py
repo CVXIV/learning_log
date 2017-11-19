@@ -152,7 +152,8 @@ if os.getcwd() == '/app':
     ALLOWED_HOSTS = ['cvxiv.herokuapp.com']
     #静态资产配置
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    STATIC_ROOT = 'staticfiles'
+    STATIC_ROOT = os.path.join(os.path.dirname(__file__),'static')
+    STATIC_URL = '/static/'
     STATICFILES_DIRS = (
         ("images",os.path.join(STATIC_ROOT, 'images').replace('\\', '/')),
         ("css",os.path.join(STATIC_ROOT, 'css').replace('\\', '/')),
