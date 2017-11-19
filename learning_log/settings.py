@@ -152,11 +152,11 @@ if os.getcwd() == '/app':
     ALLOWED_HOSTS = ['cvxiv.herokuapp.com']
     #静态资产配置
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    STATIC_ROOT = os.path.join(os.path.dirname(__file__),'static')
+    STATIC_ROOT = 'staticfiles'
     STATICFILES_DIRS = (
-        ("images",os.path.join(STATIC_URL, 'images').replace('\\', '/')),
-        ("css",os.path.join(STATIC_URL, 'css').replace('\\', '/')),
-        ("js",os.path.join(STATIC_URL, 'js').replace('\\', '/')),)
+        ("images",os.path.join(STATIC_ROOT, 'images').replace('\\', '/')),
+        ("css",os.path.join(STATIC_ROOT, 'css').replace('\\', '/')),
+        ("js",os.path.join(STATIC_ROOT, 'js').replace('\\', '/')),)
     STATICFILES_FINDERS = (
         "django.contrib.staticfiles.finders.FileSystemFinder",
         "django.contrib.staticfiles.finders.AppDirectoriesFinder")
