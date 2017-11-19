@@ -1,7 +1,11 @@
 {% extends "learning_logs/base.html" %}
 {% block header %}
     <h2>{{ topic }}</h2>
-	<h3><a href="{% url 'learning_logs:edit_topic' topic.id %}">edit topic</a></h3>
+	<h3>
+		<a style="text-decoration:none;outline:none;" href="{% url 'learning_logs:edit_topic' topic.id %}">edit topic</a>
+		&nbsp;&nbsp;
+		<a style="text-decoration:none;outline:none;" href="javascript:dele_topic()">delete topic</a>
+	</h3>
 {% endblock header %}
 
 {% block content %}  
@@ -13,24 +17,6 @@
 	<span>Creation Time:</span>{{ entry.date_added|date:'M d, Y H:i' }}
 	</h3>
 	<div>
-	<button class="btn btn-primary" data-toggle="modal" data-target="#mymodal-data" type="button">delete entry</button>
-	<!-- 模态弹出窗内容 -->
-	<div class="modal" id="mymodal-data" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Message</h4>
-				</div>
-				<div class="modal-body">
-					<p>Are you sure to delete this item?</p>
-				</div>
-				<div class="modal-footer" style="text-align:center;">
-					<button type="button" class="btn btn-default" data-dismiss="modal">canel</button>
-					<button type="button" class="btn btn-primary" onclick="javascript:top.location='{% url 'learning_logs:delete_entry' entry.id %}'">submit</button>
-				</div>
-			</div>
-		</div>
-	</div>
 	<button type="button" class="btn btn-primary" onclick="javascript:top.location='{% url 'learning_logs:edit_entry' entry.id %}'">edit entry</button>
 	</div>
 	</div>
@@ -41,4 +27,32 @@
 	{% empty %}
 	  <li>There are no entries for this topic yet. </li>
 	{% endfor %}
+	<script	type="text/javascript">
+	function dele_topic()
+	{
+		$.confirm({
+			closeIcon: true,
+			title: '系统提示',
+			content: '确认要删除吗？',
+			//type:'red',
+			//icon:'glyphicon glyphicon-question-sign',
+			buttons: {
+				ok: {
+					text: '确认',
+					btnClass: 'btn-primary',
+					action: function(){
+					location.href="{% url 'learning_logs:dele_topic' topic.id %}";
+					}
+				},
+				cancel: {
+					text: '取消',
+					btnClass: 'btn-primary',
+					action: function(){
+						// button action.
+					}
+				},
+			}
+		});
+	}
+	</script>
 {% endblock content %}

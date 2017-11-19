@@ -9,11 +9,14 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from .models import Topic,Entry
 from .forms import TopicForm,EntryForm
+import json
 def index(request):
 	#主页
 	return render(request,'learning_logs/index.html')
 #对于某些页面，只允许已登录的用户访问它们
 #@login_required
+def base(request):
+	return render(request,'learning_logs/base.html')
 def topics(request):
 	if request.user.is_authenticated():
 		topics=Topic.objects.filter(owner=request.user).order_by('date_added')
@@ -35,7 +38,7 @@ def topic(request, topic_id):
 	#date_added前面的减号指定按降序排列
 	entries = topic.entry_set.order_by('-date_added')
 	context = {'topic': topic, 'entries': entries}
-	return render(request, 'learning_logs/topic.html', context)
+	return render(request, 'learning_logs/topic.html',context)
 @login_required
 def edit_topic(request,topic_id):
 	topic = get_object_or_404(Topic, id=topic_id)
@@ -50,8 +53,6 @@ def edit_topic(request,topic_id):
 			return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic.id]))
 	context={'topic':topic,'form':form}
 	return render(request,'learning_logs/edit_topic.html', context)
-def base(request):
-	return render(request,'learning_logs/base.html')
 @login_required
 def new_topic(request):
 	#未提交数据，创建一个新表单
@@ -98,12 +99,18 @@ def edit_entry(request,entry_id):
 	context={'entry':entry,'topic':topic,'form':form}
 	return render(request,'learning_logs/edit_entry.html', context)
 @login_required
-def delete_entry(request,entry_id):
+def dele_entry(request,entry_id):
 	entry=get_object_or_404(Entry,id=entry_id)
 	topic=entry.topic
 	check_topic_owner(request,topic)
 	entry.delete()
-	return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic.id])) 
+	return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic.id]))
+@login_required
+def dele_topic(request,topic_id):
+	topic = get_object_or_404(Topic, id=topic_id)
+	check_topic_owner(request,topic)
+	Topic.objects.filter(id=topic_id).delete()
+	return HttpResponseRedirect(reverse('learning_logs:topics'))
 def check_topic_owner(request,topic):
 	if topic.owner!=request.user:
 		raise Http404

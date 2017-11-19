@@ -24,7 +24,7 @@ SECRET_KEY = 'lz)gq&z#xh)7$7ud8r7w2zlx_rp9lp)-!1y($a6d)7u&(ay%_j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG被设置为False时，你必须在ALLOWED_HOSTS中指定一个主机
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['localhost']
@@ -129,6 +129,14 @@ STATIC_URL = '/static/'
 #Django将重定向到settings.py中的LOGIN_URL指定的URL
 LOGIN_URL='/users/login/'
 # django-bootstrap3的设置
+STATIC_ROOT = os.path.join(os.path.dirname(__file__),'static')
+STATICFILES_DIRS = (
+    ("images",os.path.join(STATIC_ROOT, 'images').replace('\\', '/')),
+    ("css",os.path.join(STATIC_ROOT, 'css').replace('\\', '/')),
+    ("js",os.path.join(STATIC_ROOT, 'js').replace('\\', '/')),)
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder")
 BOOTSTRAP3 = {
 'include_jquery': True,
 }
@@ -144,5 +152,11 @@ if os.getcwd() == '/app':
     ALLOWED_HOSTS = ['cvxiv.herokuapp.com']
     #静态资产配置
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    STATIC_ROOT = 'staticfiles'
-    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+    STATIC_ROOT = os.path.join(os.path.dirname(__file__),'static')
+    STATICFILES_DIRS = (
+        ("images",os.path.join(STATIC_URL, 'images').replace('\\', '/')),
+        ("css",os.path.join(STATIC_URL, 'css').replace('\\', '/')),
+        ("js",os.path.join(STATIC_URL, 'js').replace('\\', '/')),)
+    STATICFILES_FINDERS = (
+        "django.contrib.staticfiles.finders.FileSystemFinder",
+        "django.contrib.staticfiles.finders.AppDirectoriesFinder")

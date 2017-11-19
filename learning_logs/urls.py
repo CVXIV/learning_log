@@ -18,6 +18,7 @@ url(r'^new_topic/$', views.new_topic, name='new_topic'),
 url(r'^new_entry/(?P<topic_id>\d+)/$', views.new_entry, name='new_entry'),
 # 用于编辑条目的页面
 url(r'^edit_entry/(?P<entry_id>\d+)/$', views.edit_entry,name='edit_entry'),
-url(r'^delete_entry/(?P<entry_id>\d+)/$', views.delete_entry,name='delete_entry'),
+url(r'^dele_entry/(?P<entry_id>\d+)/$', views.dele_entry,name='dele_entry'),
 url(r'^edit_topic/(?P<topic_id>\d+)/$', views.edit_topic,name='edit_topic'),
+url(r'^dele_topic/(?P<topic_id>\d+)/$', views.dele_topic,name='dele_topic'),
 ]

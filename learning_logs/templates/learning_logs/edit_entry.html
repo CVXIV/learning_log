@@ -9,7 +9,39 @@
 	{% csrf_token %}
 	{% bootstrap_form form %}
 	{% buttons %}
+	<div style="text-align:center;">
 		<button name='submit' class="btn btn-primary">save changes</button>
+		<button type="button" class="btn btn-primary" onclick="dele_entry()">delete entry</button>
+	</div>
 	{% endbuttons %}
     </form> 
+	
+	<script	type="text/javascript">
+	function dele_entry()
+	{
+		$.confirm({
+			closeIcon: true,
+			title: '系统提示',
+			content: '确认要删除吗？',
+			//type:'red',
+			//icon:'glyphicon glyphicon-question-sign',
+			buttons: {
+				ok: {
+					text: '确认',
+					btnClass: 'btn-primary',
+					action: function(){
+					location.href="{% url 'learning_logs:dele_entry' entry.id %}";
+					}
+				},
+				cancel: {
+					text: '取消',
+					btnClass: 'btn-primary',
+					action: function(){
+						// button action.
+					}
+				},
+			}
+		});
+	}
+	</script>
 {% endblock content %}
