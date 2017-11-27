@@ -4,7 +4,7 @@
     <h2>Edit entry:</h2>
 {% endblock header %} 
 {% block content %} 
-    <p><a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a></p>
+    <p><a style="text-decoration:none;outline:none;" href="javascript:return_topic()">{{ topic }}</a></p>
     <form action="{% url 'learning_logs:edit_entry' entry.id %}" method='post'>
 	{% csrf_token %}
 	{% bootstrap_form form %}
@@ -17,6 +17,32 @@
     </form> 
 	
 	<script	type="text/javascript">
+	function return_topic()
+	{
+		$.confirm({
+			closeIcon: true,
+			title: '系统提示',
+			content: '放弃本次编辑？',
+			//type:'red',
+			//icon:'glyphicon glyphicon-question-sign',
+			buttons: {
+				ok: {
+					text: '确认',
+					btnClass: 'btn-primary',
+					action: function(){
+					location.href="{% url 'learning_logs:topic' topic.id %}";
+					}
+				},
+				cancel: {
+					text: '取消',
+					btnClass: 'btn-primary',
+					action: function(){
+						// button action.
+					}
+				},
+			}
+		});
+	}
 	function dele_entry()
 	{
 		$.confirm({

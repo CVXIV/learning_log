@@ -57,7 +57,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'learning_log.urls'
-
+#关闭浏览器清除cookie
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -112,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 

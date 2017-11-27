@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Topic,Entry
 from .forms import TopicForm,EntryForm
 import json
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 def index(request):
 	#主页
 	return render(request,'learning_logs/index.html')
@@ -37,7 +38,15 @@ def topic(request, topic_id):
 	#确认请求的主题属于当前用户
 	#date_added前面的减号指定按降序排列
 	entries = topic.entry_set.order_by('-date_added')
-	context = {'topic': topic, 'entries': entries}
+	paginator=Paginator(entries,2)
+	page=request.GET.get('page')
+	try:
+		entry=paginator.page(page)
+	except PageNotAnInteger:
+		entry=paginator.page(1)
+	except EmptyPage:
+		entry=paginator.page(paginator.num_pages)
+	context = {'topic': topic, 'entries': entry}
 	return render(request, 'learning_logs/topic.html',context)
 @login_required
 def edit_topic(request,topic_id):

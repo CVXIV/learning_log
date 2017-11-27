@@ -1,4 +1,5 @@
 {% extends "learning_logs/base.html" %}
+{% load pagetag %}
 {% block header %}
     <h2>{{ topic }}</h2>
 	<h3>
@@ -27,6 +28,27 @@
 	{% empty %}
 	  <li>There are no entries for this topic yet. </li>
 	{% endfor %}
+	<nav aria-label="Page navigation" style="text-align:center;">
+		<ul class="pagination">
+			{% if entries.has_previous %}
+				<li>
+					<a style="text-decoration:none;outline:none;" href="?page={{ entries.previous_page_number }}" aria-label="Previous">
+					<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+			{% endif %}
+			{% for pg in entries.paginator.page_range %}
+				{% circle_page entries.number pg entries.paginator.num_pages %}
+			{% endfor %}
+			{% if entries.has_next %}
+				<li>
+					<a style="text-decoration:none;outline:none;" href="?page={{ entries.next_page_number }}" aria-label="Next">
+					<span aria-hidden="true">&raquo;</span>
+					</a>
+				 </li>
+			{% endif %}
+		</ul>
+	</nav>
 	<script	type="text/javascript">
 	function dele_topic()
 	{
