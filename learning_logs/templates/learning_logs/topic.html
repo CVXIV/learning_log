@@ -11,23 +11,37 @@
 
 {% block content %}  
 	<p><a href="{% url 'learning_logs:new_entry' topic.id %}">add new entry</a> </p>
+    <div class="panel-group"  id="accordion">
 	{% for entry in entries %}
 	<div class="panel panel-default">
 	<div class="panel-heading">
-	 <h3> 
-	<span>Creation Time:</span>{{ entry.date_added|date:'M d, Y H:i' }}
-	</h3>
-	<div>
-	<button type="button" class="btn btn-primary" onclick="javascript:top.location='{% url 'learning_logs:edit_entry' entry.id %}'">edit entry</button>
+        <h3>
+            <span>Creation Time:</span>{{ entry.date_added|date:'M d, Y H:i' }}
+	    </h3>
+        <div>
+	        <button type="button" class="btn btn-primary" onclick="top.location='{% url 'learning_logs:edit_entry' entry.id %}'">
+                edit entry
+            </button>
+	    </div>
+        <div style="margin-top: 0.6em;" class="panel-title">
+            <a href="#collapse"
+                class="panel-toggle" data-toggle="collapse" data-parent="#accordion">
+                <span style="font-size:30px;color:cornflowerblue;" class="glyphicon glyphicon-plus-sign"></span>
+            </a>
+        </div>
 	</div>
-	</div>
- 	<div class="panel-body"> 
-	{{ entry.text|linebreaks }}
+ 	<div id="collapse" class="panel-collapse collapse">
+        <div class="panel-body">
+            {{ entry.text|linebreaks }}
+        </div>
 	</div>
 	</div>
 	{% empty %}
-	  <li>There are no entries for this topic yet. </li>
+    <ul>
+	    <li>There are no entries for this topic yet. </li>
+    </ul>
 	{% endfor %}
+    </div>
 	<nav aria-label="Page navigation" style="text-align:center;">
 		<ul class="pagination">
 			{% if entries.has_previous %}
@@ -41,15 +55,27 @@
 				{% circle_page entries.number pg entries.paginator.num_pages %}
 			{% endfor %}
 			{% if entries.has_next %}
-				<li>
+                <li>
 					<a style="text-decoration:none;outline:none;" href="?page={{ entries.next_page_number }}" aria-label="Next">
 					<span aria-hidden="true">&raquo;</span>
 					</a>
-				 </li>
+                </li>
 			{% endif %}
 		</ul>
 	</nav>
 	<script	type="text/javascript">
+    $(function(){
+        var num=1;
+        $("a.panel-toggle").each(function(){
+            this.setAttribute("href","#collapse"+num);
+            num++;
+        });
+        num=1;
+        $("div.panel-collapse").each(function(){
+            this.setAttribute("id","collapse"+num);
+            num++;
+        });
+    });
 	function dele_topic()
 	{
 		$.confirm({
@@ -72,7 +98,7 @@
 					action: function(){
 						// button action.
 					}
-				},
+				}
 			}
 		});
 	}
