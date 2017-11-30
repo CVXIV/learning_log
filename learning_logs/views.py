@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404
 #reverse接收url中的name作为第一个参数
@@ -9,7 +7,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from .models import Topic,Entry
 from .forms import TopicForm,EntryForm
-import json
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 def index(request):
 	#主页
@@ -38,7 +35,8 @@ def topic(request, topic_id):
 	#确认请求的主题属于当前用户
 	#date_added前面的减号指定按降序排列
 	entries = topic.entry_set.order_by('-date_added')
-	paginator=Paginator(entries,2)
+	capacity=3
+	paginator=Paginator(entries,capacity)
 	page=request.GET.get('page')
 	try:
 		entry=paginator.page(page)
