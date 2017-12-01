@@ -42,27 +42,35 @@
     </ul>
 	{% endfor %}
     </div>
-	<nav aria-label="Page navigation" style="text-align:center;">
-		<ul class="pagination">
+    <div class="btn-toolbar" role="toolbar">
+        <div class="btn-group" role="group">
 			{% if entries.has_previous %}
-				<li>
-					<a style="text-decoration:none;outline:none;" href="?page={{ entries.previous_page_number }}" aria-label="Previous">
-					<span aria-hidden="true">&laquo;</span>
-					</a>
-				</li>
+					<button type="button" class="btn btn-default" style="color: dodgerblue;" onclick=window.location.href="?page={{ entries.previous_page_number }}">
+					    <span aria-hidden="true">&laquo;</span>
+					</button>
 			{% endif %}
 			{% for pg in entries.paginator.page_range %}
 				{% circle_page entries.number pg entries.paginator.num_pages %}
 			{% endfor %}
 			{% if entries.has_next %}
-                <li>
-					<a style="text-decoration:none;outline:none;" href="?page={{ entries.next_page_number }}" aria-label="Next">
+                <button type="button" class="btn btn-default" style="color: dodgerblue;" onclick=window.location.href="?page={{ entries.next_page_number }}">
 					<span aria-hidden="true">&raquo;</span>
-					</a>
-                </li>
+                </button>
 			{% endif %}
-		</ul>
-	</nav>
+        </div>
+        <div class="btn-group" role="group">
+            <div class="btn-group dropup">
+	            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+		            <span style="color: dodgerblue;">Jump</span> <span style="color: dodgerblue;" class="caret"></span>
+                </button>
+	        <ul class="dropdown-menu nav" style="min-width:100%;" role="menu">
+                {% for pg in entries.paginator.page_range %}
+                    <li><a style="color: dodgerblue;" href="?page={{ pg }}">{{ pg }}</a></li>
+                {% endfor %}
+	        </ul>
+            </div>
+        </div>
+    </div>
 	<script	type="text/javascript">
     $(function(){
         var num=1;

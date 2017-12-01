@@ -21,7 +21,7 @@ def circle_page(curr_page,loop_page,num_pages):
 	return format_html(page_ele)
 def format_page(curr_page,loop_page):
 	if curr_page==loop_page:
-		page_ele='<li class="active"><a style="text-decoration:none;outline:none;" href="?page=%s">%s</a></li>'%(loop_page,loop_page)
+		page_ele='<button style="color:dodgerblue;" class="btn btn-default active" onclick=window.location.href="?page=%s">%s</button>'%(loop_page,loop_page)
 	else:
-		page_ele='<li><a style="text-decoration:none;outline:none;" href="?page=%s">%s</a></li>'%(loop_page,loop_page)
+		page_ele='<button style="color:dodgerblue;" class="btn btn-default" onclick=window.location.href="?page=%s">%s</button>'%(loop_page,loop_page)
 	return page_ele

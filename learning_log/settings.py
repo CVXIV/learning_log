@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'lz)gq&z#xh)7$7ud8r7w2zlx_rp9lp)-!1y($a6d)7u&(ay%_j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG被设置为False时，你必须在ALLOWED_HOSTS中指定一个主机
+# DEBUG被设置为False时，你必须在ALLOWED_HOSTS中指定一个主机
 DEBUG = True
 
 ALLOWED_HOSTS = []
