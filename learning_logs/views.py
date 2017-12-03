@@ -23,8 +23,8 @@ def topics(request):
 	context={'topics':topics}
 	return render(request,'learning_logs/topics.html',context)
 #@login_required
-def topic(request, topic_id):
-	"""显示单个主题及其所有的条目"""
+def topic(request, topic_id, page_no):
+	#显示单个主题及其所有的条目
 	#现在，如果你请求不存在的主题（例如/topics/999999/），将看到404错误页面
 	topic = get_object_or_404(Topic, id=topic_id)
 	if request.user.is_authenticated():
@@ -41,7 +41,10 @@ def topic(request, topic_id):
 	try:
 		entry=paginator.page(page)
 	except PageNotAnInteger:
-		entry=paginator.page(1)
+		try:
+			entry = paginator.page(int(page_no))
+		except EmptyPage:
+			entry=paginator.page(1)
 	except EmptyPage:
 		entry=paginator.page(paginator.num_pages)
 	context = {'topic': topic, 'entries': entry}
@@ -57,7 +60,7 @@ def edit_topic(request,topic_id):
 		form=TopicForm(instance=topic,data=request.POST)
 		if form.is_valid:
 			form.save()
-			return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic.id]))
+			return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic.id,0]))
 	context={'topic':topic,'form':form}
 	return render(request,'learning_logs/edit_topic.html', context)
 @login_required
@@ -87,11 +90,11 @@ def new_entry(request,topic_id):
 			new_entry=form.save(commit=False)
 			new_entry.topic=topic
 			new_entry.save()
-			return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic_id]))
+			return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic_id,0]))
 	context={'topic':topic,'form':form}
 	return render(request, 'learning_logs/new_entry.html', context)
 @login_required
-def edit_entry(request,entry_id):
+def edit_entry(request,entry_id,page_no):
 	entry=get_object_or_404(Entry,id=entry_id)
 	topic=entry.topic
 	check_topic_owner(request,topic)
@@ -102,16 +105,16 @@ def edit_entry(request,entry_id):
 		form=EntryForm(instance=entry,data=request.POST)
 		if form.is_valid:
 			form.save()
-			return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic.id]))
-	context={'entry':entry,'topic':topic,'form':form}
+			return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic.id,page_no]))
+	context={'entry':entry,'topic':topic,'form':form,'page_no':page_no}
 	return render(request,'learning_logs/edit_entry.html', context)
 @login_required
-def dele_entry(request,entry_id):
+def dele_entry(request,entry_id,page_no):
 	entry=get_object_or_404(Entry,id=entry_id)
 	topic=entry.topic
 	check_topic_owner(request,topic)
 	entry.delete()
-	return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic.id]))
+	return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic.id,page_no]))
 @login_required
 def dele_topic(request,topic_id):
 	topic = get_object_or_404(Topic, id=topic_id)

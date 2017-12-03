@@ -5,7 +5,7 @@
 {% endblock header %} 
 {% block content %} 
     <p><a style="text-decoration:none;outline:none;" href="javascript:return_topic()">{{ topic }}</a></p>
-    <form action="{% url 'learning_logs:edit_entry' entry.id %}" method='post'>
+    <form action="{% url 'learning_logs:edit_entry' entry.id page_no %}" method='post'>
 	{% csrf_token %}
 	{% bootstrap_form form %}
 	{% buttons %}
@@ -17,6 +17,9 @@
     </form> 
 	
 	<script	type="text/javascript">
+    $(function(){
+        $('#id_text')[0].focus()
+    });
 	function return_topic()
 	{
 		$.confirm({
@@ -30,7 +33,7 @@
 					text: '确认',
 					btnClass: 'btn-primary',
 					action: function(){
-					location.href="{% url 'learning_logs:topic' topic.id %}";
+					location.href="{% url 'learning_logs:topic' topic.id page_no %}";
 					}
 				},
 				cancel: {
@@ -39,7 +42,7 @@
 					action: function(){
 						// button action.
 					}
-				},
+				}
 			}
 		});
 	}
@@ -56,7 +59,7 @@
 					text: '确认',
 					btnClass: 'btn-primary',
 					action: function(){
-					location.href="{% url 'learning_logs:dele_entry' entry.id %}";
+					location.href="{% url 'learning_logs:dele_entry' entry.id page_no %}";
 					}
 				},
 				cancel: {
@@ -65,7 +68,7 @@
 					action: function(){
 						// button action.
 					}
-				},
+				}
 			}
 		});
 	}

@@ -4,7 +4,7 @@
     <h2>Edit Topic:</h2>
 {% endblock header %} 
 {% block content %} 
-    <p><a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a></p>
+    <p><a href="{% url 'learning_logs:topic' topic.id 0 %}">{{ topic }}</a></p>
     <form action="{% url 'learning_logs:edit_topic' topic.id %}" method='post'>
 	{% csrf_token %}
 	{% bootstrap_form form %}
