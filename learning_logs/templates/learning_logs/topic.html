@@ -9,35 +9,36 @@
 	</h3>
 {% endblock header %}
 
-{% block content %}  
+{% block content %}
 	<p><a href="{% url 'learning_logs:new_entry' topic.id %}">add new entry</a> </p>
     <div class="panel-group"  id="accordion">
 	{% for entry in entries %}
 	<div class="panel panel-default">
-	<div class="panel-heading">
-        <div style="text-align: center;">
-            <h2 style="color: dodgerblue;">{{ entry.title }}</h2>
-        </div>
-        <div>
-	        <button type="button" class="btn btn-primary" onclick="top.location='{% url 'learning_logs:edit_entry' entry.id entries.number %}'">
-                edit entry
-            </button>
+	    <div class="panel-heading">
+            <div style="text-align: center;">
+                <h2 style="color: dodgerblue;">{{ entry.title }}</h2>
+            </div>
+            <div>
+	            <button type="button" class="btn btn-primary" onclick="top.location='{% url 'learning_logs:edit_entry' entry.id entries.number %}'">
+                    edit entry
+                </button>
+	        </div>
+            <div class="panel-title">
+                <h3 style="float:right;">
+                    Creation Time: {{ entry.date_added|date:'Y-m-d H:i' }}
+	            </h3>
+            </div>
 	    </div>
-        <div style="margin-top: 0.6em;" class="panel-title">
-            <a href="#collapse"
-                class="panel-toggle" data-toggle="collapse" data-parent="#accordion">
-                <span style="font-size:30px;color:cornflowerblue;" class="glyphicon glyphicon-plus-sign"></span>
-            </a>
-            <h3 style="float:right;">
-                Creation Time: {{ entry.date_added|date:'Y-m-d H:i' }}
-	        </h3>
+        <div class="panel-heading">
+             <a href="#collapse" class="panel-toggle" data-toggle="collapse" data-parent="#accordion">
+                 <span style="font-size:30px;color:cornflowerblue;" class="glyphicon glyphicon-plus-sign"></span>
+             </a>
         </div>
-	</div>
- 	<div id="collapse" class="panel-collapse collapse">
-        <div class="panel-body">
-            {{ entry.text|linebreaks }}
-        </div>
-	</div>
+ 	    <div id="collapse" class="panel-collapse collapse">
+            <div class="panel-body">
+                {{ entry.text|linebreaks }}
+            </div>
+	    </div>
 	</div>
 	{% empty %}
     <ul>
@@ -66,7 +67,7 @@
 	            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 		            <span style="color: dodgerblue;">Jump</span> <span style="color: dodgerblue;" class="caret"></span>
                 </button>
-	        <ul class="dropdown-menu" style="min-width:100%;height:300%;overflow-y:scroll;" role="menu">
+	        <ul class="dropdown-menu" style="min-width:100%;max-height:300%;overflow-y:scroll;" role="menu">
                 {% for pg in entries.paginator.page_range %}
                     <li><a style="color: dodgerblue;" href="?page={{ pg }}">{{ pg }}</a></li>
                 {% endfor %}
