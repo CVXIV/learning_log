@@ -12,6 +12,10 @@ def logout_view(request):
 	logout(request)
 	return HttpResponseRedirect(reverse('learning_logs:index'))
 def register(request):
+	if request.GET.get('newsn') == '1':
+		csn = CaptchaStore.generate_key()
+		cimageurl = captcha_image_url(csn)
+		return HttpResponse(cimageurl)
 	if request.method!='POST':
 		form=CaptchaModelForm()
 	else:
@@ -24,9 +28,3 @@ def register(request):
 			return HttpResponseRedirect(reverse('learning_logs:index'))
 	context={'form':form}
 	return render(request,'users/register.html',context)
-def refresh_captcha(request):
-	to_json_response = dict()
-	to_json_response['status'] = 1
-	to_json_response['new_cptch_key'] = CaptchaStore.generate_key()
-	to_json_response['new_cptch_image'] = captcha_image_url(to_json_response['new_cptch_key'])
-	return HttpResponse(json.dumps(to_json_response), content_type='application/json')

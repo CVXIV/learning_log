@@ -13,5 +13,12 @@
 		$(function(){
 			$("#id_captcha_1").addClass("form-control");
 		});
+		$(".captcha").click(function(){
+			$.get("?newsn=1", function(result){
+				$('.captcha').attr("src",result);
+				$('#id_captcha_0').attr("value",result.split('/')[3]);
+			});
+			return false;
+		});
 	</script>
 {% endblock content %}

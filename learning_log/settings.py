@@ -51,8 +51,8 @@ INSTALLED_APPS = [
 # 格式
 CAPTCHA_OUTPUT_FORMAT = u'%(text_field)s %(hidden_field)s %(image)s'
 # 噪点样式
-CAPTCHA_NOISE_FUNCTIONS = (#'captcha.helpers.noise_null',  # 没有样式
-	'captcha.helpers.noise_arcs', # 线
+CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_null',  # 没有样式
+	#'captcha.helpers.noise_arcs', # 线
 	# 'captcha.helpers.noise_dots', # 点
 	)
 # 图片大小
