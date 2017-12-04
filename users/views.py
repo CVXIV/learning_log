@@ -2,15 +2,20 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import UserCreationForm
+#from django.contrib.auth.forms import UserCreationForm
+from .forms import CaptchaModelForm
+from captcha.models import CaptchaStore
+from captcha.helpers import captcha_image_url
+import json
+from django.http import HttpResponse
 def logout_view(request):
 	logout(request)
 	return HttpResponseRedirect(reverse('learning_logs:index'))
 def register(request):
 	if request.method!='POST':
-		form=UserCreationForm()
+		form=CaptchaModelForm()
 	else:
-		form=UserCreationForm(data=request.POST)
+		form=CaptchaModelForm(data=request.POST)
 		if form.is_valid():
 			new_user=form.save()
 			#让用户自动登录，再重定向到主页
@@ -19,3 +24,9 @@ def register(request):
 			return HttpResponseRedirect(reverse('learning_logs:index'))
 	context={'form':form}
 	return render(request,'users/register.html',context)
+def refresh_captcha(request):
+	to_json_response = dict()
+	to_json_response['status'] = 1
+	to_json_response['new_cptch_key'] = CaptchaStore.generate_key()
+	to_json_response['new_cptch_image'] = captcha_image_url(to_json_response['new_cptch_key'])
+	return HttpResponse(json.dumps(to_json_response), content_type='application/json')
