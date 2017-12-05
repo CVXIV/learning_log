@@ -2,12 +2,13 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth import login, logout, authenticate
-#from django.contrib.auth.forms import UserCreationForm
-from .forms import CaptchaModelForm
+from .forms import UserCreationForm
 from captcha.models import CaptchaStore
 from captcha.helpers import captcha_image_url
+from django.http import HttpResponse,JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 import json
-from django.http import HttpResponse
 def logout_view(request):
 	logout(request)
 	return HttpResponseRedirect(reverse('learning_logs:index'))
@@ -17,9 +18,9 @@ def register(request):
 		cimageurl = captcha_image_url(csn)
 		return HttpResponse(cimageurl)
 	if request.method!='POST':
-		form=CaptchaModelForm()
+		form=UserCreationForm()
 	else:
-		form=CaptchaModelForm(data=request.POST)
+		form=UserCreationForm(data=request.POST)
 		if form.is_valid():
 			new_user=form.save()
 			#让用户自动登录，再重定向到主页
@@ -28,3 +29,11 @@ def register(request):
 			return HttpResponseRedirect(reverse('learning_logs:index'))
 	context={'form':form}
 	return render(request,'users/register.html',context)
+@csrf_exempt
+def check_data(request):
+	user=User.objects.filter(username=request.POST.get('username'))
+	if user:
+		check=1
+	else:
+		check=0
+	return HttpResponse(check)

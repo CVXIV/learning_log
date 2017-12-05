@@ -1,22 +1,47 @@
 {% extends "learning_logs/base.html" %}
 {% load bootstrap3 %}
 {% block content %}
-	<form method="post" action="{% url 'users:register' %}">
+	<form method="post" id="form" action="{% url 'users:register' %}">
 		{% csrf_token %}
 		{% bootstrap_form form %}
 		{% buttons %}
-			<button name="submit" class="btn btn-primary">register</button>
+			<button id="submit" class="btn btn-primary">register</button>
 		{% endbuttons %}
 		<input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
 	</form>
+	<div id="ohsnap"></div>
 	<script	type="text/javascript">
 		$(function(){
 			$("#id_captcha_1").addClass("form-control");
+			$("#id_username").addClass("validate[required,maxSize[50],custom[checkBlank]]");
+			$("#id_password1").addClass("validate[required,maxSize[100]]");
+			$("#id_password2").addClass("validate[required,maxSize[50]]");
+			$("#form").validationEngine('attach', {
+				promptPosition: "topRight", //验证弹出框的位置，topRight,topLeft,bottomRight,bottomLeft,centerRight,centerLeft,inline
+				onValidationComplete: function(form, status){
+				//表单提交前的验证结果回调函数，如果验证成功把disable了的表单控件恢复
+					if (status) {
+						 return true;
+	 	 				//return true后表单会提交
+				 	}
+				}
+			});
 		});
 		$(".captcha").click(function(){
 			$.get("?newsn=1", function(result){
 				$('.captcha').attr("src",result);
 				$('#id_captcha_0').attr("value",result.split('/')[3]);
+			});
+			return false;
+		});
+		$("#id_username").blur(function () {
+			$.ajax({
+				url:"{% url 'users:check_data' %}",
+				type:'POST',
+				tradition:true,
+				cache:false,
+				data:{'username':$("#id_username").val()}
+			}).done(function (data) {
 			});
 			return false;
 		});
