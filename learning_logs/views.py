@@ -44,7 +44,10 @@ def topic(request, topic_id, page_no):
 		try:
 			entry = paginator.page(int(page_no))
 		except EmptyPage:
-			entry=paginator.page(1)
+			if int(page_no)>1:
+				entry = paginator.page(int(page_no)-1)
+			else:
+				entry=paginator.page(1)
 	except EmptyPage:
 		entry=paginator.page(paginator.num_pages)
 	context = {'topic': topic, 'entries': entry}
