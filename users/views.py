@@ -31,9 +31,13 @@ def register(request):
 	return render(request,'users/register.html',context)
 @csrf_exempt
 def check_data(request):
-	user=User.objects.filter(username=request.POST.get('username'))
-	if user:
-		check=1
+	user=User.objects.filter(username=request.POST['username'])
+	cs = CaptchaStore.objects.filter(response=request.POST['response'],hashkey=request.POST['hashkey'])
+	if cs.exists() and not user.exists():
+		is_validate={'result':False}
 	else:
-		check=0
-	return HttpResponse(check)
+		if user.exists():
+			is_validate = {'result': 'username'}
+		else:
+			is_validate = {'result':'captcha'}
+	return HttpResponse(json.dumps(is_validate), content_type="application/json")

@@ -13,9 +13,13 @@
                     "alertTextDateRange": "* 日期范围不可空白"
                 },
 				"checkpass": {//密码强度校验
-                    "regex":/(?=(?:.*?[a-zA-Z]){1})(?=(?:.*?\d){1})/,//不强制含特殊字符(?=(?:.*?[!@#$%*()_+^&}{:;?.]){1})
-                    "alertText": "* 必须包含数字与字母"
+                    "regex":/(?=(?:.*?\D){1})(?=(?:.*?\d){1})/,//不强制含特殊字符(?=(?:.*?[!@#$%*()_+^&}{:;?.]){1})
+                    "alertText": "* 必须包含数字和其他字符"
                 },
+				"checkName":{
+                	"regex": /^[\w\d@.+-]+$/,
+					"alertText": "* 用户名非法"
+				},
                 "pwdedit":{
                 	"regex":/^(?![^a-zA-Z]+$)(?!\D+$).{8,}$/,
                 	"alertText": "* 必须为8位或8位以上数字和字母的组合"
@@ -194,11 +198,10 @@
                 },
                 // --- CUSTOM RULES -- Those are specific to the demos, they can be removed or changed to your likings
                 "ajaxUserCall": {
-                    "url": "ajaxValidateFieldUser",
+					"url": "/users/check_data/",
                     // you may want to pass extra data on the ajax call
-                    "extraData": "name=eric",
                     "alertText": "* 此名称已被其他人使用",
-                    "alertTextLoad": "* 正在确认名称是否有其他人使用，请稍等。"
+                    "alertTextLoad": "* 正在确认帐号名称是否有其他人使用，请稍等。"
                 },
 				"ajaxUserCallPhp": {
                     "url": "phpajax/ajaxValidateFieldUser.php",

@@ -4,24 +4,20 @@
 	<form method="post" id="form" action="{% url 'users:register' %}">
 		{% csrf_token %}
 		{% bootstrap_form form %}
-		{% buttons %}
-			<button id="submit" class="btn btn-primary">register</button>
-		{% endbuttons %}
 		<input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
 	</form>
-	<div id="ohsnap"></div>
+	{% buttons %}
+		<button id="submit" class="btn btn-primary">register</button>
+	{% endbuttons %}
 	<script	type="text/javascript">
 		$(function(){
-			$("#id_captcha_1").addClass("form-control");
-			$("#id_username").addClass("validate[required,maxSize[150],custom[checkBlank]]");
-			$("#id_password1").addClass("validate[required,maxSize[100]]");
-			$("#id_password2").addClass("validate[required,confirm[id_password1]]");
-			$("#form").validationEngine({
-				validationEventTrigger:"keyup blur",
+			$("#id_captcha_1").addClass("form-control validate[required]");
+			$("#id_username").addClass("validate[required,maxSize[150],custom[checkName]]").focus();
+			$("#id_password1").addClass("validate[required,minSize[8],custom[checkpass]");
+			$("#id_password2").addClass("validate[required,equals[id_password1]]");
+			$("#form").validationEngine('attach',{
 				promptPosition: "topRight", //验证弹出框的位置，topRight,topLeft,bottomRight,bottomLeft,centerRight,centerLeft,inline
-				//focusFirstField: true,
-				addPromptClass: 'blackPopup',
-				onFieldFailure:function(){},
+				focusFirstField: true,
 				onValidationComplete: function(form, status){
 				//表单提交前的验证结果回调函数，如果验证成功把disable了的表单控件恢复
 					if (status) {
@@ -38,16 +34,46 @@
 			});
 			return false;
 		});
-		$("#id_username").blur(function () {
-			$.ajax({
+		$("#submit").click(function () {
+			if($("#form").validationEngine('validate')){
+				$.ajax({
 				url:"{% url 'users:check_data' %}",
 				type:'POST',
-				tradition:true,
+				dataType: 'json',
 				cache:false,
-				data:{'username':$("#id_username").val()}
-			}).done(function (data) {
-			});
-			return false;
+				data:{'username':$("#id_username").val(),'response':$("#id_captcha_1").val(),'hashkey':$("#id_captcha_0").val()}
+				}).done(function (data) {
+						if(data.result===false){
+							$("#form").submit();
+						}else{
+							if(data.result==='username'){
+								$("#id_username").focus();
+								alert_username();
+							}else{
+								$("#id_captcha_1").focus();
+								alert_captcha();
+							}
+						}
+					});
+			}
 		});
+		function alert_username(){
+			$.alert({
+				closeIcon: true,
+				title: 'Alerts',
+				content: 'Duplicate username!'
+				//type:'red',
+				//icon:'glyphicon glyphicon-question-sign',
+			});
+		}
+		function alert_captcha(){
+			$.alert({
+				closeIcon: true,
+				title: 'Alerts',
+				content: 'Wrong captcha!'
+				//type:'red',
+				//icon:'glyphicon glyphicon-question-sign',
+			});
+		}
 	</script>
 {% endblock content %}

@@ -42,9 +42,9 @@
 
 .formError .formErrorContent {
 	width: 100%;
-	background: #ee0101;
+	background: #fff;
 	position:relative;
-	color: #fff;
+	color: dodgerblue;
 	min-width: 120px;
 	font-size: 11px;
 	border: 2px solid #ddd;
@@ -108,7 +108,7 @@ body.rtl .formError .formErrorArrow {
 	-o-box-shadow: 0 2px 3px #444;
 	font-size: 0px;
 	height: 1px;
-	background: #ee0101;
+	background: #fff;
 	margin: 0 auto;
 	line-height: 0;
 	font-size: 0;
