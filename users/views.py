@@ -29,6 +29,17 @@ def register(request):
 			return HttpResponseRedirect(reverse('learning_logs:index'))
 	context={'form':form}
 	return render(request,'users/register.html',context)
+def setting(request):
+	if request.method!='POST':
+		user=User.objects.filter(username=request.user.username)
+		print(user.all())
+		form=UserCreationForm()
+	else:
+		form = UserCreationForm(data=request.POST)
+		if form.is_valid():
+			User.objects.filter(username=request.POST['username']).update(password=request.POST['password1'])
+	context = {'form': form}
+	return render(request, 'users/register.html', context)
 @csrf_exempt
 def check_data(request):
 	user=User.objects.filter(username=request.POST['username'])

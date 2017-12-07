@@ -8,5 +8,6 @@ urlpatterns = [#登录页面
 	url(r'^logout/$', views.logout_view, name='logout'),
 	# 注册页面
 	url(r'^register/$', views.register, name='register'),
+	url(r'^setting/$', views.setting, name='setting'),
 	url(r'^check_data/$', views.check_data, name='check_data'),
 ]

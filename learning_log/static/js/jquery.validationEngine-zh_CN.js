@@ -17,7 +17,7 @@
                     "alertText": "* 必须包含数字和其他字符"
                 },
 				"checkName":{
-                	"regex": /^[\w\d@.+-]+$/,
+                	"regex": /^[\w@.+-]+$/,
 					"alertText": "* 用户名非法"
 				},
                 "pwdedit":{
