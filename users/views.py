@@ -2,10 +2,10 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth import login, logout, authenticate
-from .forms import UserCreationForm
+from .forms import UserCreationForm,UserAlterForm
 from captcha.models import CaptchaStore
 from captcha.helpers import captcha_image_url
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 import json
@@ -31,15 +31,21 @@ def register(request):
 	return render(request,'users/register.html',context)
 def setting(request):
 	if request.method!='POST':
-		user=User.objects.filter(username=request.user.username)
-		print(user.all())
-		form=UserCreationForm()
+		form=UserAlterForm()
 	else:
-		form = UserCreationForm(data=request.POST)
+		form = UserAlterForm(data=request.POST)
 		if form.is_valid():
-			User.objects.filter(username=request.POST['username']).update(password=request.POST['password1'])
+			username = request.user.username
+			oldpassword = request.POST['password1']
+			user = authenticate(username=username, password=oldpassword)
+			if user is not None and user.is_active:
+				newpassword = request.POST['password2']
+				user.set_password(newpassword)
+				user.save()
+				login(request, user)
+			return HttpResponseRedirect(reverse('learning_logs:index'))
 	context = {'form': form}
-	return render(request, 'users/register.html', context)
+	return render(request, 'users/setting.html', context)
 @csrf_exempt
 def check_data(request):
 	user=User.objects.filter(username=request.POST['username'])
@@ -51,4 +57,14 @@ def check_data(request):
 			is_validate = {'result': 'username'}
 		else:
 			is_validate = {'result':'captcha'}
+	return HttpResponse(json.dumps(is_validate), content_type="application/json")
+@csrf_exempt
+def check_pass(request):
+	username = request.user.username
+	password = request.POST['password']
+	user = authenticate(username=username, password=password)
+	if user is not None and user.is_active:
+		is_validate={'result':False}
+	else:
+		is_validate = {'result': True}
 	return HttpResponse(json.dumps(is_validate), content_type="application/json")

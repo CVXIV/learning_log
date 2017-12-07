@@ -10,4 +10,5 @@ urlpatterns = [#登录页面
 	url(r'^register/$', views.register, name='register'),
 	url(r'^setting/$', views.setting, name='setting'),
 	url(r'^check_data/$', views.check_data, name='check_data'),
+	url(r'^check_pass/$', views.check_pass, name='check_pass'),
 ]

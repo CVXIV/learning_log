@@ -20,13 +20,28 @@ class UserCreationForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ("username",)
-	def __init__(self, *args, **kwargs):
-		super(UserCreationForm, self).__init__(*args, **kwargs)
-		if self._meta.model.USERNAME_FIELD in self.fields:
-			self.fields[self._meta.model.USERNAME_FIELD].widget.attrs.update({'autofocus': True})
 	def save(self, commit=True):
 		user = super(UserCreationForm, self).save(commit=False)
 		user.set_password(self.cleaned_data["password1"])
 		if commit:
 			user.save()
 		return user
+class UserAlterForm(forms.Form):
+	password1 = forms.CharField(
+		label=_("Original Password"),
+		strip=True,
+		widget=forms.PasswordInput,
+		help_text=_("Please enter your original password."),
+	)
+	password2 = forms.CharField(
+		label=_("New Password"),
+		widget=forms.PasswordInput,
+		strip=True,
+		help_text=password_validation.password_validators_help_text_html(),
+	)
+	password3 = forms.CharField(
+		label=_("Password confirmation"),
+		widget=forms.PasswordInput,
+		strip=True,
+		help_text=_("Enter the same password as before, for verification."),
+	)
