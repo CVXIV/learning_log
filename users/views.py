@@ -8,6 +8,7 @@ from captcha.helpers import captcha_image_url
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 import json
 def logout_view(request):
 	logout(request)
@@ -29,6 +30,7 @@ def register(request):
 			return HttpResponseRedirect(reverse('learning_logs:index'))
 	context={'form':form}
 	return render(request,'users/register.html',context)
+@login_required
 def setting(request):
 	if request.method!='POST':
 		form=UserAlterForm()
@@ -38,11 +40,10 @@ def setting(request):
 			username = request.user.username
 			oldpassword = request.POST['password1']
 			user = authenticate(username=username, password=oldpassword)
-			if user is not None and user.is_active:
-				newpassword = request.POST['password2']
-				user.set_password(newpassword)
-				user.save()
-				login(request, user)
+			newpassword = request.POST['password2']
+			user.set_password(newpassword)
+			user.save(update_fields=['password'])
+			login(request, user)
 			return HttpResponseRedirect(reverse('learning_logs:index'))
 	context = {'form': form}
 	return render(request, 'users/setting.html', context)

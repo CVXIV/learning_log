@@ -7,7 +7,7 @@
  <form id="form" method="post" action="{% url 'users:setting' %}" class="form">
     {% csrf_token %}
     {% bootstrap_form form %}
-     <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
+	<input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
 </form>
 	{% buttons %}
 		<button id="submit" class="btn btn-primary">register</button>
@@ -39,7 +39,7 @@
 				data:{'password':$("#id_password1").val()}
 				}).done(function (data) {
 						if(data.result===false){
-							$("#form").submit();
+							alert_ok();
 						}else{
 							$("#id_password1").focus();
 							alert_password();
@@ -52,8 +52,22 @@
 				closeIcon: true,
 				title: 'Alerts',
 				content: 'Wrong password!'
-				//type:'red',
-				//icon:'glyphicon glyphicon-question-sign',
+			});
+		}
+		function alert_ok(){
+			$.alert({
+				title: 'Tips',
+				content: 'Update successfully!',
+				buttons:{
+					ok: {
+						text: "ok!",
+						btnClass: 'btn-primary',
+						keys: ['enter'],
+						action: function(){
+							$("#form").submit();
+						}
+					}
+				}
 			});
 		}
 	</script>
