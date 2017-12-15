@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from .models import Topic,Entry
-from .forms import TopicForm,EntryForm
+from .forms import TopicForm,EntryForm,IMGForm
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 def index(request):
 	#主页
@@ -127,3 +127,17 @@ def dele_topic(request,topic_id):
 def check_topic_owner(request,topic):
 	if topic.owner!=request.user:
 		raise Http404
+@login_required
+def uploadImg(request,entry_id,page_no):
+	entry=get_object_or_404(Entry, id=entry_id)
+	topic=entry.topic
+	if request.method == 'POST':
+		form = IMGForm(request.POST,request.FILES)
+		if form.is_valid():
+			img=form.save(commit=False)
+			img.entry=entry
+			form.save()
+			return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic.id, page_no]))
+	form=IMGForm()
+	context={'form':form,'entry':entry,'page_no':page_no}
+	return render(request, 'learning_logs/uploadImg.html',context)

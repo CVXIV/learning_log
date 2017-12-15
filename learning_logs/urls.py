@@ -1,6 +1,8 @@
 #定义learning_logs的URL模式
 from django.conf.urls import url
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
 #r让Python将接下来的字符串视为原始字符串
 #请求的URL与前述正则表达式匹配时,Django将调用views.index
 #第三个实参将这个URL模式的名称 指定为index，让我们能够在代码的其他地方引用它
@@ -21,4 +23,5 @@ url(r'^edit_entry/(?P<entry_id>\d+)/(?P<page_no>\d+)$', views.edit_entry,name='e
 url(r'^dele_entry/(?P<entry_id>\d+)/(?P<page_no>\d+)$', views.dele_entry,name='dele_entry'),
 url(r'^edit_topic/(?P<topic_id>\d+)/$', views.edit_topic,name='edit_topic'),
 url(r'^dele_topic/(?P<topic_id>\d+)/$', views.dele_topic,name='dele_topic'),
+url(r'^new_img/(?P<entry_id>\d+)/(?P<page_no>\d+)$', views.uploadImg,name="new_img"),
 ]

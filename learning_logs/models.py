@@ -20,3 +20,7 @@ class Entry(models.Model):
 			return self.text[:50]+"..."
 		else:
 			return self.text
+class IMG(models.Model):
+	entry=models.ForeignKey(Entry,on_delete=models.PROTECT)
+	img = models.ImageField(upload_to='img')
+	name = models.CharField(max_length=20)

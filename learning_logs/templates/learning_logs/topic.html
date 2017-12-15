@@ -22,6 +22,9 @@
 	            <button type="button" class="btn btn-primary" onclick="top.location='{% url 'learning_logs:edit_entry' entry.id entries.number %}'">
                     edit entry
                 </button>
+				<button type="button" class="btn btn-primary" onclick="top.location='{% url 'learning_logs:new_img' entry.id entries.number %}'">
+                    add pictures
+                </button>
 	        </div>
             <div class="panel-title">
                 <h3 style="float:right;">

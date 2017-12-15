@@ -1,25 +1,50 @@
 {% extends "learning_logs/base.html" %}
 {% load bootstrap3 %}
+{% load static from staticfiles %}
 {% block header %}
     <h2>Edit entry:</h2>
 {% endblock header %} 
-{% block content %} 
+{% block content %}
     <p><a style="text-decoration:none;outline:none;" href="javascript:return_topic()">{{ topic }}</a></p>
-    <form action="{% url 'learning_logs:edit_entry' entry.id page_no %}" method='post'>
+    <form id="form" action="{% url 'learning_logs:edit_entry' entry.id page_no %}" method='post'>
 	{% csrf_token %}
 	{% bootstrap_form form %}
+    </form>
 	{% buttons %}
 	<div style="text-align:center;">
-		<button name='submit' class="btn btn-primary">save changes</button>
+		<button id='submit' class="btn btn-primary">save changes</button>
 		<button type="button" class="btn btn-primary" onclick="dele_entry()">delete entry</button>
 	</div>
 	{% endbuttons %}
-    </form> 
-	
+	<div id="background" class="background">
+		<img src="{% static 'images/loading.gif' %}" class="loading">
+	</div>
+<style type="text/css">
+	.background {
+		display: none;
+		opacity: 0.4;
+		filter: alpha(opacity=40);
+		background:#bdc3c7;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 2000;
+		text-align:center;
+	}
+	.loading{
+		margin-top:20%;
+		width:7%;
+		height:14%;
+	}
+</style>
 	<script	type="text/javascript">
     $(function(){
         $('#id_text')[0].focus()
     });
+    $("#submit").click(function(){
+		$("#form").submit();
+		$("#background").css({display:"block",width:$(document.body).outerWidth(true),height:$(document.body).outerHeight(true)});
+	});
 	function return_topic()
 	{
 		$.confirm({

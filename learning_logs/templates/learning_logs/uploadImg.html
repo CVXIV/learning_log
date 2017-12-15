@@ -2,16 +2,15 @@
 {% load bootstrap3 %}
 {% load static from staticfiles %}
 {% block header %}
-    <h2>Add a new entry:</h2>
+    <h2>Add a new picture:</h2>
 {% endblock header %} 
 {%block content %}
-<p><a style="text-decoration:none;outline:none;" href="javascript:return_topic()">{{ topic }}</a></p>
- <form id="form" action="{% url 'learning_logs:new_entry' topic.id %}" method='post'>
+<form id="form" action="{% url 'learning_logs:new_img' entry.id page_no %}" method='post' enctype="multipart/form-data">
  {% csrf_token %}
  {% bootstrap_form form %}
 </form>
 	{% buttons %}
-		<button id='submit' class="btn btn-primary">add entry</button>
+		<button id='submit' class="btn btn-primary">add pic</button>
 	{% endbuttons %}
 	<div id="background" class="background">
 		<img src="{% static 'images/loading.gif' %}" class="loading">
@@ -40,33 +39,7 @@
 		$("#background").css({display:"block",width:$(document.body).outerWidth(true),height:$(document.body).outerHeight(true)});
 	});
     $(function(){
-        $('#id_title')[0].focus();
+    	$("#id_name")[0].focus();
     });
-	function return_topic()
-	{
-		$.confirm({
-			closeIcon: true,
-			title: '系统提示',
-			content: '放弃本次编辑？',
-			//type:'red',
-			//icon:'glyphicon glyphicon-question-sign',
-			buttons: {
-				ok: {
-					text: '确认',
-					btnClass: 'btn-primary',
-					action: function(){
-					location.href="{% url 'learning_logs:topic' topic.id 0 %}";
-					}
-				},
-				cancel: {
-					text: '取消',
-					btnClass: 'btn-primary',
-					action: function(){
-						// button action.
-					}
-				}
-			}
-		});
-	}
 </script>
 {% endblock content %}
