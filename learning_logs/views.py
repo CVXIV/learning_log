@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, Http404
 #带参数的：参数可以是变量名 {%url'name' 参数 %} 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from .models import Topic,Entry
+from .models import Topic,Entry,IMG
 from .forms import TopicForm,EntryForm,IMGForm
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 def index(request):
@@ -137,7 +137,15 @@ def uploadImg(request,entry_id,page_no):
 			img=form.save(commit=False)
 			img.entry=entry
 			form.save()
-			return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic.id, page_no]))
-	form=IMGForm()
-	context={'form':form,'entry':entry,'page_no':page_no}
+			return HttpResponseRedirect(reverse('learning_logs:show_img', args=[entry.id, page_no]))
+	else:
+		form=IMGForm()
+	context={'form':form,'topic':topic,'entry':entry,'page_no':page_no}
 	return render(request, 'learning_logs/uploadImg.html',context)
+@login_required
+def showImg(request,entry_id,page_no):
+	entry=get_object_or_404(Entry, id=entry_id)
+	topic=entry.topic
+	imgs = IMG.objects.filter(entry=entry)
+	context = {'imgs':imgs, 'topic': topic, 'entry': entry, 'page_no': page_no}
+	return render(request, 'learning_logs/showImg.html', context)

@@ -24,4 +24,5 @@ url(r'^dele_entry/(?P<entry_id>\d+)/(?P<page_no>\d+)$', views.dele_entry,name='d
 url(r'^edit_topic/(?P<topic_id>\d+)/$', views.edit_topic,name='edit_topic'),
 url(r'^dele_topic/(?P<topic_id>\d+)/$', views.dele_topic,name='dele_topic'),
 url(r'^new_img/(?P<entry_id>\d+)/(?P<page_no>\d+)$', views.uploadImg,name="new_img"),
-]
+url(r'^show_img/(?P<entry_id>\d+)/(?P<page_no>\d+)$', views.showImg,name="show_img"),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

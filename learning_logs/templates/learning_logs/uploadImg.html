@@ -5,6 +5,7 @@
     <h2>Add a new picture:</h2>
 {% endblock header %} 
 {%block content %}
+	<p><a style="text-decoration:none;outline:none;" href="javascript:return_entry()">{{ entry.title }}</a></p>
 <form id="form" action="{% url 'learning_logs:new_img' entry.id page_no %}" method='post' enctype="multipart/form-data">
  {% csrf_token %}
  {% bootstrap_form form %}
@@ -29,8 +30,8 @@
 	}
 	.loading{
 		margin-top:20%;
-		width:7%;
-		height:14%;
+		width:5%;
+		height:30%;
 	}
 </style>
 <script	type="text/javascript">
@@ -39,7 +40,10 @@
 		$("#background").css({display:"block",width:$(document.body).outerWidth(true),height:$(document.body).outerHeight(true)});
 	});
     $(function(){
-    	$("#id_name")[0].focus();
+    	$("#id_name").focus();
     });
+    function return_entry() {
+		location.href="{% url 'learning_logs:topic' topic.id page_no %}";
+	}
 </script>
 {% endblock content %}
