@@ -6,26 +6,58 @@
 {% endblock header %}
 {%block content %}
 <p><a style="text-decoration:none;outline:none;" href="javascript:return_entry()">{{ entry.title }}</a></p>
-<div id="myCarousel" class="carousel slide">
-	<ol class="carousel-indicators">
-		{% for img in imgs %}
-			<li data-target="#myCarousel"></li>
-		{% endfor %}
-	</ol>
-	<div class="carousel-inner">
-		{% for img in imgs %}
-			<div class="item">
-				<img src="{{ img.img.url}}" class="img-responsive center-block" />
-				<div class="carousel-caption">{{ img.img.name }}</div>
+	{% if imgs.count > 0 %}
+	<div style="height:48em;overflow-y: scroll;">
+		<div id="myCarousel" class="carousel slide">
+			<ol class="carousel-indicators">
+			{% for img in imgs %}
+				<li data-target="#myCarousel"></li>
+			{% endfor %}
+			</ol>
+			<div class="carousel-inner">
+				{% for img in imgs %}
+					<div class="item">
+						<img src="{{ img.img.url}}" class="img-responsive center-block" onclick="ajremove('{{ img.id }}')" />
+						<div class="carousel-caption">{{ img.name}}</div>
+					</div>
+				{% endfor %}
 			</div>
-		{% endfor %}
+			<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+			<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+		</div>
 	</div>
-	<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-	<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
-</div>
+	{% else %}
+		<ul>
+			<li>There are no pictures for this entry yet. </li>
+		</ul>
+	{% endif %}
 {% buttons %}
 	<button id='submit' class="btn btn-primary" onclick="top.location='{% url 'learning_logs:new_img' entry.id page_no %}'">add pic</button>
+	{% if imgs.count > 0 %}
+		<button id='removeall' class="btn btn-primary">remove all</button>
+	{% endif %}
 {% endbuttons %}
+	<div id="background" class="background">
+		<img src="{% static 'images/loading.gif' %}" class="loading">
+	</div>
+<style type="text/css">
+	.background {
+		display: none;
+		opacity: 0.4;
+		filter: alpha(opacity=40);
+		background:#bdc3c7;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 2000;
+		text-align:center;
+	}
+	.loading{
+		margin-top:20%;
+		width:7%;
+		height:14%;
+	}
+</style>
 <script type="text/javascript">
 $(function(){
 	$("ol li:first").addClass("active");
@@ -35,9 +67,74 @@ $(function(){
 		this.setAttribute("data-slide-to",""+num);
 		num++;
 	});
+	$('#myCarousel').carousel({
+		pause: true,
+		interval: false
+	});
 });
+function ajremove(img_id) {
+	$.confirm({
+		closeIcon: true,
+		title: '系统提示',
+		content: '确认要删除该图片吗？',
+		buttons: {
+			ok: {
+				text: '确认',
+				btnClass: 'btn-primary',
+				action: function(){
+					$("#background").css({display:"block",width:$(document.body).outerWidth(true),height:$(document.body).outerHeight(true)});
+					$.ajax({
+						url:"{% url 'learning_logs:dele_img' %}",
+						type:'POST',
+						dataType: 'json',
+						cache:false,
+						data:{'entry_id':{{ entry.id }},'img_id':img_id}
+					}).done(function () {
+						location.href="{% url 'learning_logs:show_img' entry.id page_no %}";
+					});
+				}
+			},
+			cancel: {
+				text: '取消',
+				btnClass: 'btn-primary',
+				action: function(){
+				}
+			}
+		}
+	});
+}
 function return_entry(){
 	location.href="{% url 'learning_logs:topic' topic.id page_no %}";
 }
+$("#removeall").click(function () {
+	$.confirm({
+		closeIcon: true,
+		title: '系统提示',
+		content: '确认要全部删除吗？',
+		buttons: {
+			ok: {
+				text: '确认',
+				btnClass: 'btn-primary',
+				action: function(){
+					$("#background").css({display:"block",width:$(document.body).outerWidth(true),height:$(document.body).outerHeight(true)});
+					$.ajax({
+						url:"{% url 'learning_logs:dele_all_img' entry.id %}",
+						type:'GET',
+						dataType: 'json',
+						cache:false
+					}).done(function () {
+						location.href="{% url 'learning_logs:show_img' entry.id page_no %}";
+					});
+				}
+			},
+			cancel: {
+				text: '取消',
+				btnClass: 'btn-primary',
+				action: function(){
+				}
+			}
+		}
+	});
+});
 </script>
 {% endblock content %}

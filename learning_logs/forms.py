@@ -17,3 +17,4 @@ class IMGForm(forms.ModelForm):
 		model=IMG
 		fields=['name','img']
 		labels={'name':'Name','img':''}
+		

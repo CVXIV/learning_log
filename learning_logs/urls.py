@@ -25,4 +25,6 @@ url(r'^edit_topic/(?P<topic_id>\d+)/$', views.edit_topic,name='edit_topic'),
 url(r'^dele_topic/(?P<topic_id>\d+)/$', views.dele_topic,name='dele_topic'),
 url(r'^new_img/(?P<entry_id>\d+)/(?P<page_no>\d+)$', views.uploadImg,name="new_img"),
 url(r'^show_img/(?P<entry_id>\d+)/(?P<page_no>\d+)$', views.showImg,name="show_img"),
+url(r'^dele_all_img/(?P<entry_id>\d+)/$', views.deleAllImg,name="dele_all_img"),
+url(r'^dele_img/$', views.deleImg,name="dele_img"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
